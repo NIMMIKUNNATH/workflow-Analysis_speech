@@ -1,0 +1,137 @@
+{
+  "_README": [
+    "Full condition set for study.py. Every condition changes ONE setting from",
+    "baseline and runs on the SAME fixed 40 recordings.",
+    "",
+    "DESIGN NOTE. An earlier version of this file excluded parameters on the",
+    "grounds that published work reported them inert. That was the wrong call.",
+    "Citing a paper and testing a parameter are different decisions: a measured",
+    "null result WITH a supporting citation is far stronger than an untested",
+    "assumption. Where the literature made a prediction, it is noted below so the",
+    "result can be reported as agreeing or disagreeing with it.",
+    "",
+    "Roughly 30 min per GPU condition. Post-processing conditions are free -",
+    "they recompute from cached JSON without re-transcribing.",
+    "",
+    "THE ONLY EXCLUSIONS are four configurations measured as destructive on this",
+    "audio, cited to our own data rather than to anyone else:",
+    "  temperature=0.0                    1821->807 and 1771->886 words",
+    "  no_speech/log_prob/compression=None  byte-identical output to the above,",
+    "                                     because with all three None the",
+    "                                     temperature fallback can never trigger",
+    "Both were reproducible across two recordings and cost roughly half the",
+    "transcript. They are reported as results, not silently omitted."
+  ],
+  "baseline": {},
+  "_S1_MODEL": "model size. MMedFD (arXiv:2509.19817) found scaling small->large-v3 improved WER 53->13 percent while WORSENING healthcare-term error 15->37 percent. Judge these on CLINICAL metrics, not WER.",
+  "model_small": {
+    "MODEL_NAME": "\"small\""
+  },
+  "model_medium": {
+    "MODEL_NAME": "\"medium\""
+  },
+  "model_largev2": {
+    "MODEL_NAME": "\"large-v2\""
+  },
+  "_S2_PRECISION": "compute precision. Previously confounded with another change, so never cleanly measured.",
+  "compute_fp16": {
+    "COMPUTE_TYPE": "\"float16\""
+  },
+  "_S3_BEAM": "beam search width. Whisper and WhisperX default to 5. Prior testing on two recordings found no stable optimum - which is expected if the effect is smaller than the noise floor.",
+  "beam1": {
+    "BEAM_SIZE": "1"
+  },
+  "beam3": {
+    "BEAM_SIZE": "3"
+  },
+  "beam8": {
+    "BEAM_SIZE": "8"
+  },
+  "_S4_BEAMSHAPE": "beam search shape. Kasai et al. (arXiv:2204.05424) introduced patience and report gains on summarisation and machine translation; the paper contains NO ASR evaluation. Testing it on clinical dialogue is therefore genuinely open.",
+  "patience_150": {
+    "PATIENCE": "1.5"
+  },
+  "patience_200": {
+    "PATIENCE": "2.0"
+  },
+  "length_pen_080": {
+    "LENGTH_PENALTY": "0.8"
+  },
+  "length_pen_120": {
+    "LENGTH_PENALTY": "1.2"
+  },
+  "_S5_REPETITION": "repetition control. A Bangla long-form study (arXiv:2602.21741) found aggressive settings HURT by blocking legitimate repeats. This corpus contains many (no no no, very very painful), so the risk is real here.",
+  "rep_penalty_110": {
+    "REPETITION_PENALTY": "1.1"
+  },
+  "no_repeat_3": {
+    "NO_REPEAT_NGRAM_SIZE": "3"
+  },
+  "_S6_THRESHOLDS": "decoding thresholds at MID-RANGE values. Prior testing set these to None, which disables the fallback entirely. Nudging them is a different question and has never been examined on this audio.",
+  "nospeech_040": {
+    "NO_SPEECH_THRESHOLD": "0.4"
+  },
+  "nospeech_075": {
+    "NO_SPEECH_THRESHOLD": "0.75"
+  },
+  "nospeech_090": {
+    "NO_SPEECH_THRESHOLD": "0.9"
+  },
+  "logprob_-05": {
+    "LOG_PROB_THRESHOLD": "-0.5"
+  },
+  "logprob_-15": {
+    "LOG_PROB_THRESHOLD": "-1.5"
+  },
+  "compression_20": {
+    "COMPRESSION_RATIO_THRESHOLD": "2.0"
+  },
+  "compression_30": {
+    "COMPRESSION_RATIO_THRESHOLD": "3.0"
+  },
+  "_S7_CONTEXT": "previous-text conditioning. WhisperX disables this by default to reduce hallucination; OpenAI note it can cause failure loops. Previously tested only in combination with a compute change, so confounded.",
+  "cond_prev_off": {
+    "CONDITION_ON_PREVIOUS_TEXT": "False"
+  },
+  "_S8_VAD": "voice activity detection. Measured 2.3 points worse when disabled on two recordings - re-tested here at proper scale, plus its sub-parameters.",
+  "vad_off": {
+    "VAD_FILTER": "False"
+  },
+  "vad_thresh_030": {
+    "VAD_THRESHOLD": "0.3"
+  },
+  "vad_thresh_070": {
+    "VAD_THRESHOLD": "0.7"
+  },
+  "vad_silence_500": {
+    "VAD_MIN_SILENCE_MS": "500"
+  },
+  "vad_silence_1000": {
+    "VAD_MIN_SILENCE_MS": "1000"
+  },
+  "vad_pad_200": {
+    "VAD_SPEECH_PAD_MS": "200"
+  },
+  "vad_pad_600": {
+    "VAD_SPEECH_PAD_MS": "600"
+  },
+  "_S9_POSTPROC": "speaker grouping. FREE - recomputed from cached JSON. Note MIN_INTERVAL_DURATION also DELETES words in dropped intervals, so report it against WER as well as WDER.",
+  "merge_gap_030": {
+    "MERGE_GAP_SECONDS": "0.30"
+  },
+  "merge_gap_150": {
+    "MERGE_GAP_SECONDS": "1.50"
+  },
+  "merge_gap_200": {
+    "MERGE_GAP_SECONDS": "2.00"
+  },
+  "min_interval_00": {
+    "MIN_INTERVAL_DURATION": "0.00"
+  },
+  "min_interval_25": {
+    "MIN_INTERVAL_DURATION": "0.25"
+  },
+  "min_interval_40": {
+    "MIN_INTERVAL_DURATION": "0.40"
+  }
+}

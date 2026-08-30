@@ -1,0 +1,31 @@
+# Audio and derived transcripts are not redistributed
+*.wav
+*.mp3
+*.mp4
+*.xlsx
+*.rttm
+
+# Model artefacts and caches
+*.nemo
+*.pkl
+*.pt
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+venv/
+.venv/
+
+# Editor and operating-system metadata
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Optuna journals are large; completed trials are in results/
+optuna_*.log
+*.db
+
+# Never commit credentials
+.env
+*.token

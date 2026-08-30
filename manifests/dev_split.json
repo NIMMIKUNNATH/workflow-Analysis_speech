@@ -1,0 +1,22 @@
+{
+  "seed": 0,
+  "requested_dev_n": 10,
+  "realised_dev_n": 14,
+  "holdout_n": 258,
+  "dev_ids": [
+    "CAR0003",
+    "DER0001",
+    "GAS0001",
+    "GEN0001",
+    "MSK0014",
+    "MSK0045",
+    "RES0004",
+    "RES0017",
+    "RES0056",
+    "RES0091",
+    "RES0104",
+    "RES0169",
+    "RES0189",
+    "RES0208"
+  ]
+}
