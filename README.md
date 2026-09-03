@@ -25,6 +25,8 @@ recordings.
   SHA-256 records.
 - `results/`: the study log, completed optimisation summaries, and aggregate
   per-consultation clinical metrics.
+- `validation/`: the 19-case synthetic scorer-validation suite and its retained
+  metric-level output (56 specified comparisons).
 
 ## Environment
 
@@ -79,6 +81,9 @@ python analysis/final_paired_compare.py --help
 python analysis/final_minimax.py --help
 python figures/make_figures.py
 python figures/make_response_figures.py
+python validation/synthetic_validation.py \
+  --module scoring.final_score_primock \
+  --out validation/synthetic_validation_reproduced.csv
 ```
 
 Use `--help` for script-specific arguments. Full transcription and search runs
@@ -93,6 +98,8 @@ require the corpora, model access, CUDA environment, and roots above.
   pipeline snapshots.
 - `manifests/subset.json`, `conditions.json`, `conditions_all.json`,
   `dev_split.json`, and `lexicon_v1.json` record the evaluated design.
+- `validation/synthetic_validation.py` contains the executable 19-case metric
+  suite; `validation/synthetic_validation.csv` records the retained results.
 
 The post-freeze pipeline exposes decoder parameters that were previously
 implicit and includes a faster-whisper 1.2.1 word-alignment fallback. The
