@@ -2,8 +2,9 @@
 """
 Synthetic validation suite for the metric implementations.
 
-Every case has a hand-computed expected value. The suite calls the retained
-scorer functions and reports pass/fail.
+Released synthetic scorer-validation suite accompanying the manuscript. Every
+case has hand-computed expected values; the suite calls the retained scorer
+functions and reports pass/fail.
 
 Emits synthetic_validation.csv, which becomes a supplementary table.
 
@@ -21,8 +22,9 @@ Expected signatures:
         segs : [(start_s, end_s, speaker), ...]
 
 USAGE
-    python synthetic_validation.py
-    python synthetic_validation.py --module scoring.final_score_primock --tol 1e-6
+    python validation/synthetic_validation.py \
+        --module scoring.final_score_primock \
+        --out validation/synthetic_validation_reproduced.csv
 """
 
 import argparse
@@ -34,9 +36,9 @@ from pathlib import Path
 
 import pandas as pd
 
-# Permit the documented `python validation/synthetic_validation.py` invocation
-# to import scorer modules from the repository root.
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
+if str(REPOSITORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPOSITORY_ROOT))
 
 # --------------------------------------------------------------- adapter ---
 HYP_IS_PAIRS = True   # set False if compute_wer_wder takes a flat word list

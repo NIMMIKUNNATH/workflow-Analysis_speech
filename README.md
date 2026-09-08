@@ -84,8 +84,11 @@ python analysis/final_paired_compare.py --help
 python analysis/final_minimax.py --help
 python figures/make_figures.py
 python figures/make_response_figures.py
+python tests/test_row_assignment.py
 python tests/test_negation_insertion_audit.py
-python validation/synthetic_validation.py
+python validation/synthetic_validation.py \
+  --module scoring.final_score_primock \
+  --out validation/synthetic_validation_reproduced.csv
 ```
 
 Use `--help` for script-specific arguments. Full transcription and search runs
@@ -102,6 +105,8 @@ require the corpora, model access, CUDA environment, and roots above.
   `dev_split.json`, and `lexicon_v1.json` record the evaluated design.
 - `results/post_freeze/HASHES_post_freeze.txt` records hashes for the
   post-freeze analysis and validation files.
+- `validation/synthetic_validation.py` contains the executable 19-case metric
+  suite; `validation/synthetic_validation.csv` records the retained results.
 
 The post-freeze pipeline exposes decoder parameters that were previously
 implicit and includes a faster-whisper 1.2.1 word-alignment fallback. The
