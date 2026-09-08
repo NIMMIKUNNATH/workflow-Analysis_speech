@@ -15,6 +15,11 @@ from pyannote.audio import Pipeline
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment
 
+try:
+    from .row_assignment import assign_words_to_intervals
+except ImportError:
+    from row_assignment import assign_words_to_intervals
+
 
 # ============================================================
 # SETTINGS
@@ -483,16 +488,11 @@ def dominant_speaker(words, start, end):
 
 def build_rows(shared_diar, assigned_words):
     rows = []
+    interval_words, _ = assign_words_to_intervals(assigned_words, shared_diar)
 
-    for interval in shared_diar:
+    for interval, selected in zip(shared_diar, interval_words):
         start = interval["start"]
         end = interval["end"]
-
-        selected = words_in_interval(
-            assigned_words,
-            start,
-            end,
-        )
 
         text = join_words(selected)
 

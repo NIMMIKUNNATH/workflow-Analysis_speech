@@ -1,0 +1,64 @@
+case,name,metric,expected,observed,status,detail,note
+L01,identical,wer,0.0,0.0,PASS,,"N=6, no errors"
+L01,identical,wder,0.0,0.0,PASS,,"N=6, no errors"
+L01,identical,sa_wer,0.0,0.0,PASS,,"N=6, no errors"
+L02,one substitution,wer,16.6667,16.6667,PASS,,"S=1, N=6"
+L02,one substitution,wder,0.0,0.0,PASS,,"S=1, N=6"
+L02,one substitution,sa_wer,16.6667,16.6667,PASS,,"S=1, N=6"
+L03,terminal deletion,wer,33.3333,33.3333,PASS,,"D=1, N=3"
+L03,terminal deletion,wder,0.0,0.0,PASS,,"D=1, N=3"
+L03,terminal deletion,sa_wer,33.3333,33.3333,PASS,,"D=1, N=3"
+L04,internal deletion,wer,16.6667,16.6667,PASS,,D=1 mid-sequence; the negation-deletion case
+L04,internal deletion,wder,0.0,0.0,PASS,,D=1 mid-sequence; the negation-deletion case
+L04,internal deletion,sa_wer,16.6667,16.6667,PASS,,D=1 mid-sequence; the negation-deletion case
+L05,one insertion,wer,33.3333,33.3333,PASS,,"I=1, N=3; SA-WER includes insertions"
+L05,one insertion,wder,0.0,0.0,PASS,,"I=1, N=3; SA-WER includes insertions"
+L05,one insertion,sa_wer,33.3333,33.3333,PASS,,"I=1, N=3; SA-WER includes insertions"
+L06,S + D + I combined,wer,60.0,60.0,PASS,,"S=2, I=1, N=5"
+L06,S + D + I combined,wder,0.0,0.0,PASS,,"S=2, I=1, N=5"
+L06,S + D + I combined,sa_wer,60.0,60.0,PASS,,"S=2, I=1, N=5"
+L07,empty hypothesis,wer,,,PASS,expected no result,specified scorer policy: an empty transcript returns no result
+L07,empty hypothesis,wder,,,PASS,expected no result,specified scorer policy: an empty transcript returns no result
+L07,empty hypothesis,sa_wer,,,PASS,expected no result,specified scorer policy: an empty transcript returns no result
+L08,hypothesis longer than reference,wer,200.0,200.0,PASS,,"I=2, N=1; WER exceeds 100%"
+L08,hypothesis longer than reference,wder,0.0,0.0,PASS,,"I=2, N=1; WER exceeds 100%"
+L08,hypothesis longer than reference,sa_wer,200.0,200.0,PASS,,"I=2, N=1; WER exceeds 100%"
+S01,"all speakers wrong, words correct",wer,0.0,0.0,PASS,,WDER is permutation-invariant: the A<->B swap maps to zero
+S01,"all speakers wrong, words correct",wder,0.0,0.0,PASS,,WDER is permutation-invariant: the A<->B swap maps to zero
+S01,"all speakers wrong, words correct",sa_wer,0.0,0.0,PASS,,WDER is permutation-invariant: the A<->B swap maps to zero
+S02,one word on the wrong speaker,wer,0.0,0.0,PASS,,1 of 4 aligned words mislabelled; no mapping fixes it
+S02,one word on the wrong speaker,wder,25.0,25.0,PASS,,1 of 4 aligned words mislabelled; no mapping fixes it
+S02,one word on the wrong speaker,sa_wer,25.0,25.0,PASS,,1 of 4 aligned words mislabelled; no mapping fixes it
+S03,speaker error on a substituted word,wer,25.0,25.0,PASS,,substitutions count in the WDER denominator
+S03,speaker error on a substituted word,wder,25.0,25.0,PASS,,substitutions count in the WDER denominator
+S03,speaker error on a substituted word,sa_wer,25.0,25.0,PASS,,substitutions count in the WDER denominator
+S04,deletion excluded from WDER,wer,25.0,25.0,PASS,,D excluded from WDER; 3 aligned words all correctly labelled
+S04,deletion excluded from WDER,wder,0.0,0.0,PASS,,D excluded from WDER; 3 aligned words all correctly labelled
+S04,deletion excluded from WDER,sa_wer,25.0,25.0,PASS,,D excluded from WDER; 3 aligned words all correctly labelled
+S05,SA-WER >= WER by construction,wer,25.0,25.0,PASS,,1 lexical error + 1 speaker-only error
+S05,SA-WER >= WER by construction,wder,25.0,25.0,PASS,,1 lexical error + 1 speaker-only error
+S05,SA-WER >= WER by construction,sa_wer,50.0,50.0,PASS,,1 lexical error + 1 speaker-only error
+D01,perfect diarization,der,0.0,0.0,PASS,,identical boundaries and labels
+D01,perfect diarization,missed,0.0,0.0,PASS,,identical boundaries and labels
+D01,perfect diarization,false_alarm,0.0,0.0,PASS,,identical boundaries and labels
+D01,perfect diarization,confusion,0.0,0.0,PASS,,identical boundaries and labels
+D02,labels swapped,der,0.0,0.0,PASS,,optimal mapping absorbs a global swap
+D02,labels swapped,missed,0.0,0.0,PASS,,optimal mapping absorbs a global swap
+D02,labels swapped,false_alarm,0.0,0.0,PASS,,optimal mapping absorbs a global swap
+D02,labels swapped,confusion,0.0,0.0,PASS,,optimal mapping absorbs a global swap
+D03,two seconds missed,der,,18.4211,n/a,,"~2 s missed of 10 s, less collar at the boundary"
+D03,two seconds missed,missed,,18.4211,n/a,,"~2 s missed of 10 s, less collar at the boundary"
+D03,two seconds missed,false_alarm,0.0,0.0,PASS,,"~2 s missed of 10 s, less collar at the boundary"
+D03,two seconds missed,confusion,0.0,0.0,PASS,,"~2 s missed of 10 s, less collar at the boundary"
+D04,two seconds false alarm,der,,18.4211,n/a,,hypothesis over-runs the reference
+D04,two seconds false alarm,missed,0.0,0.0,PASS,,hypothesis over-runs the reference
+D04,two seconds false alarm,false_alarm,,18.4211,n/a,,hypothesis over-runs the reference
+D04,two seconds false alarm,confusion,,0.0,n/a,,hypothesis over-runs the reference
+D05,whole second speaker confused,der,,50.0,n/a,,half of reference speech assigned to the wrong speaker
+D05,whole second speaker confused,missed,0.0,0.0,PASS,,half of reference speech assigned to the wrong speaker
+D05,whole second speaker confused,false_alarm,0.0,0.0,PASS,,half of reference speech assigned to the wrong speaker
+D05,whole second speaker confused,confusion,,50.0,n/a,,half of reference speech assigned to the wrong speaker
+D06,empty hypothesis,der,100.0,100.0,PASS,,all reference speech missed
+D06,empty hypothesis,missed,100.0,100.0,PASS,,all reference speech missed
+D06,empty hypothesis,false_alarm,0.0,0.0,PASS,,all reference speech missed
+D06,empty hypothesis,confusion,0.0,0.0,PASS,,all reference speech missed

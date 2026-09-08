@@ -45,6 +45,8 @@ MUTE = "#5A6B75"
 
 plt.rcParams.update({
     "font.family": "serif",
+    "font.serif": ["Times New Roman", "Times", "DejaVu Serif"],
+    "mathtext.fontset": "stix",
     "font.size": 9,
     "axes.labelsize": 10,
     "axes.titlesize": 11,

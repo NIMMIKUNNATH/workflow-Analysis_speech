@@ -1,13 +1,12 @@
 # Clinical ASR configuration selection
 
-Private reproducibility repository for the manuscript **Clinical and
-Speaker-Attribution Errors Diverge from Word Error Rate During Configuration
-Selection for Medical ASR**.
+Public reproducibility repository for the manuscript **Multi-Outcome
+Configuration Selection for Clinical Speech Recognition: Word Error Rate Can
+Conceal Negation and Speaker-Attribution Trade-offs**.
 
-This repository is private while the manuscript and author metadata are being
-finalised. It contains the complete planned code-release inventory assembled
-from the study workspace: 30 Python scripts, frozen manifests, aggregate
-results, and pipeline hashes. It does not redistribute audio, reference
+It contains the study code, frozen manifests, aggregate results,
+post-freeze sensitivity analyses, validation tests, and pipeline hashes. It
+does not redistribute audio, reference
 transcripts, model weights, caches, access tokens, or local clinical
 recordings.
 
@@ -19,20 +18,26 @@ recordings.
 - `scoring/`: WER, clinical-error, speaker-attribution, and corpus scorers.
 - `analysis/`: paired comparisons, selection rules, sensitivity analyses,
   surrogate analyses, and audit utilities.
+- `analysis/post_freeze/`: declared post-freeze sensitivity analyses.
 - `comparators/`: Canary-1b-v2 and the documented NeMo MSDD attempt.
 - `figures/`: scripts used to generate manuscript figures and tables.
 - `manifests/`: frozen split, condition registry, lexicon, requirements, and
   SHA-256 records.
 - `results/`: the study log, completed optimisation summaries, and aggregate
   per-consultation clinical metrics.
+- `validation/`: the synthetic WER, WDER, SA-WER, and DER validation suite and
+  its 56 passing metric-level comparisons across 19 cases.
+- `tests/`: focused tests for the insertion-inclusive negation audit.
 
 ## Environment
 
-The frozen Python environment is recorded in `requirements.txt` and
-`manifests/requirements.txt`. The reported GPU runs used WSL2, CUDA 12.9, and
-one NVIDIA RTX 5090 Laptop GPU. A CUDA-capable environment is required for
-transcription and diarization; the saved-result analyses can run without a
-GPU.
+The installable Python environment is recorded in `requirements.txt`.
+`manifests/requirements.txt` is the immutable environment record covered by
+the analytic-freeze hash; its trailing version-summary lines are retained as
+provenance and are not pip requirement entries. The reported GPU runs used
+WSL2, CUDA 12.9, and one NVIDIA RTX 5090 Laptop GPU. A CUDA-capable environment
+is required for transcription and diarization; saved-result analyses can run
+without a GPU.
 
 ```bash
 python -m venv .venv
@@ -43,7 +48,7 @@ python -m pip install -r requirements.txt
 Pyannote model access requires a Hugging Face token supplied at run time:
 
 ```bash
-export HF_TOKEN=your_token_here
+export HF_TOKEN="replace-with-authorized-token"
 ```
 
 Never commit a token or `.env` file. The token used during development should
@@ -79,6 +84,8 @@ python analysis/final_paired_compare.py --help
 python analysis/final_minimax.py --help
 python figures/make_figures.py
 python figures/make_response_figures.py
+python tests/test_negation_insertion_audit.py
+python validation/synthetic_validation.py
 ```
 
 Use `--help` for script-specific arguments. Full transcription and search runs
@@ -93,6 +100,8 @@ require the corpora, model access, CUDA environment, and roots above.
   pipeline snapshots.
 - `manifests/subset.json`, `conditions.json`, `conditions_all.json`,
   `dev_split.json`, and `lexicon_v1.json` record the evaluated design.
+- `results/post_freeze/HASHES_post_freeze.txt` records hashes for the
+  post-freeze analysis and validation files.
 
 The post-freeze pipeline exposes decoder parameters that were previously
 implicit and includes a faster-whisper 1.2.1 word-alignment fallback. The
@@ -108,6 +117,9 @@ pipeline hashes must be used to determine which snapshot produced each run.
   are reported stage-specifically and must not be pooled.
 - The repository does not make the source datasets redistributable and does
   not make the system suitable for clinical deployment.
+- Independent clinician adjudication of the clinical-cue definitions has not
+  been completed; the released signals are reproducible measurement
+  definitions, not clinically validated ground truth or measures of harm.
 
 ## Citation and licence
 

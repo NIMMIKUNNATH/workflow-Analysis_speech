@@ -46,6 +46,9 @@ from pathlib import Path
 
 import pandas as pd
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "pipeline"))
+from row_assignment import assign_words_to_intervals
+
 MODEL_NAME = "nvidia/canary-1b-v2"
 
 # Copied verbatim from single_large_v3.py so row building is identical.
@@ -95,10 +98,9 @@ def assign_overlap(words, diar):
 
 def build_rows(shared_diar, assigned):
     rows = []
-    for iv in shared_diar:
+    interval_words, _ = assign_words_to_intervals(assigned, shared_diar)
+    for iv, sel in zip(shared_diar, interval_words):
         s, e = iv["start"], iv["end"]
-        sel = [w for w in assigned
-               if overlap_duration(w["start"], w["end"], s, e) > 0]
         if not sel:
             continue
         totals = {}

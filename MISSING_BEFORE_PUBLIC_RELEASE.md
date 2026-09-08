@@ -1,9 +1,8 @@
-# Missing items before public release
+# Remaining items before archival release
 
-The private repository contains the complete planned code inventory (30 study
-scripts), the frozen environment, manifests, hashes, optimisation summaries,
-study log, and 57 aggregate clinical-result tables. No required code file in
-the release inventory is currently missing.
+The public repository contains the study code, frozen environment, manifests,
+hashes, optimisation summaries, study log, aggregate clinical-result tables,
+post-freeze sensitivity analyses, and the synthetic metric-validation suite.
 
 ## Author input still required
 
@@ -11,17 +10,11 @@ the release inventory is currently missing.
 - Software licence choice.
 - Final manuscript citation and DOI or preprint URL.
 - Ethics/data-governance wording for each dataset and local recording source.
-- Funding statement, competing-interests declaration, CRediT roles, and the
-  target journal's generative-AI disclosure.
-- Confirmation that the Hugging Face token used during development has been
-  rotated before any public release.
+- Funding statement, competing-interests declaration, and CRediT roles.
+- Final archived release tag and DOI or permanent archive identifier.
 
 ## Study work still outstanding
 
-- Publish the synthetic metric-validation suite with known WER, WDER, SA-WER,
-  and DER error counts.
-- Complete the segment-level minimum-interval mechanism analysis linking
-  deleted negations to reference-utterance duration and error type.
 - Obtain independent clinical review of the outcome definitions and
   investigator-set non-inferiority margins.
 - Add any regenerated results if the clinical lexicon or negation cue set is

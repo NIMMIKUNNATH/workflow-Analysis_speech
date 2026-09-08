@@ -44,11 +44,13 @@ CLINICAL_ROOT = os.environ.get(
 CLIN = os.path.join(CLINICAL_ROOT, "clinical_*.csv")
 LOG = os.path.join(os.environ.get("ASR_STUDY_ROOT", RESULTS_ROOT), "study_log.csv")
 
-DEEP, WARN, GOOD, MUTE = "#065A82", "#B85042", "#2C5F2D", "#5A6B75"
+DEEP, WARN, GOOD, MUTE = "#147D92", "#C4513B", "#347859", "#66777F"
 INK, GRID = "#1A1A1A", "#E1E9ED"
 
 plt.rcParams.update({
-    "font.family": "serif", "font.size": 9,
+    "font.family": "serif",
+    "font.serif": ["Times New Roman", "Times", "DejaVu Serif"],
+    "mathtext.fontset": "stix", "font.size": 9,
     "axes.labelsize": 9.5, "axes.titlesize": 10,
     "xtick.labelsize": 8.5, "ytick.labelsize": 8.5,
     "legend.fontsize": 8.5,
@@ -59,6 +61,28 @@ plt.rcParams.update({
 
 DUPES = {"largev2", "medium40", "small", "baseline40"}
 SKIP = {"272", "full", "errors"} | DUPES
+
+DISPLAY_LABEL = {
+    "best_combo": "large-v2 + VAD silence 1000 ms",
+    "tpe_trial32": "large-v2 TPE trial 32",
+    "tpe_trial35": "large-v3 TPE trial 35",
+    "v2_vad_500": "large-v2 + VAD silence 500 ms",
+    "v2_beam3": "large-v2 + beam 3",
+    "v2_merge150": "large-v2 + merge gap 1.50 s",
+    "v2_beam1": "large-v2 + beam 1",
+    "v2_vad_off": "large-v2 + VAD off",
+    "model_largev2": "model: large-v2",
+    "model_medium": "model: medium",
+    "model_small": "model: small",
+    "model_turbo": "model: large-v3-turbo",
+    "cond_prev_off": "previous-text conditioning off",
+    "compute_fp16": "compute: float16",
+    "no_repeat_3": "no-repeat 3-gram",
+}
+
+
+def display_labels(index):
+    return [DISPLAY_LABEL.get(str(value), str(value).replace("_", " ")) for value in index]
 
 
 # ---------------------------------------------------------------- loading --
@@ -105,7 +129,7 @@ SWEEPS = [
     ("VAD speech threshold", "",
      [("vad_thresh_030", 0.30), ("baseline", 0.50), ("vad_thresh_070", 0.70)]),
     ("VAD minimum silence", "ms",
-     [("baseline", 250), ("vad_silence_500", 500), ("vad_silence_1000", 1000)]),
+     [("vad_silence_500", 500), ("vad_silence_1000", 1000), ("baseline", 2000)]),
     ("VAD speech padding", "ms",
      [("vad_pad_200", 200), ("baseline", 400), ("vad_pad_600", 600)]),
     ("Merge gap", "s",
@@ -188,9 +212,6 @@ def fig_response_grid(g):
         floor_span(ax, wvals, 3.0)
         floor_span(ax2, nvals, 2.0)
 
-        ax.text(0.03, 0.05, f"WER range {max(wer)-min(wer):.2f} pp",
-                transform=ax.transAxes, fontsize=7, color=MUTE)
-
         ax.set_xticks(x)
         ax.set_xticklabels([f"{v:g}" for v in x], fontsize=8)
 
@@ -219,20 +240,31 @@ def fig_model_response(g):
 
     labels = [l for _, l in models]
     x = np.arange(len(models))
+    # Medication is intentionally shown as a raw count over the fixed
+    # 99-token denominator. The previous macro-rate panel was visually
+    # inconsistent with the pooled counts reported in the tables.
+    med_counts = {
+        c: int(pd.read_csv(os.path.join(
+            CLINICAL_ROOT, f"clinical_{c}.csv"
+        )).medication_err.sum())
+        for c, _ in models
+    }
     metrics = [("wer", "Word error rate (%)", DEEP),
                ("neg", "Negation error (%)", WARN),
-               ("med", "Medication error (%)", GOOD),
+               ("med_count", "Medication errors (count/99)", GOOD),
                ("clin", "Clinical term error (%)", MUTE)]
 
     fig, axes = plt.subplots(1, 4, figsize=(11, 2.9))
     for ax, (col, lab, colr) in zip(axes, metrics):
-        v = [g.loc[c, col] for c, _ in models]
+        v = ([med_counts[c] for c, _ in models] if col == "med_count"
+             else [g.loc[c, col] for c, _ in models])
         bars = ax.bar(x, v, color=colr, width=0.6, zorder=3)
         best = int(np.argmin(v))
         bars[best].set_edgecolor(INK)
         bars[best].set_linewidth(1.4)
         for xi, vi in zip(x, v):
-            ax.text(xi, vi, f"{vi:.1f}", ha="center", va="bottom",
+            label = f"{int(vi)}" if col == "med_count" else f"{vi:.1f}"
+            ax.text(xi, vi, label, ha="center", va="bottom",
                     fontsize=8, color=MUTE)
         ax.set_xticks(x)
         ax.set_xticklabels(labels, rotation=40, ha="right", fontsize=8)
@@ -266,7 +298,7 @@ def fig_effect_sizes(g):
             height=0.62, zorder=3)
     a1.axvline(0, color=INK, lw=0.9)
     a1.set_yticks(y)
-    a1.set_yticklabels(d.index, fontsize=7.5)
+    a1.set_yticklabels(display_labels(d.index), fontsize=7.5)
     a1.set_xlabel("Change in WER from baseline (pp)")
     a1.set_title("Word error rate", fontsize=10, pad=6)
     a1.invert_yaxis()
@@ -305,13 +337,16 @@ def fig_error_composition(log):
     ax.barh(y, g["ins"].values, left=g["sub"].values + g["dele"].values, color=GOOD, height=0.62,
             label="insertions", zorder=3)
     ax.set_yticks(y)
-    ax.set_yticklabels(g.index, fontsize=7.5)
+    ax.set_yticklabels(display_labels(g.index), fontsize=7.5)
     ax.invert_yaxis()
     ax.set_xlabel("Rate over reference words (%)")
     ax.set_title("Error composition by condition, ordered by total WER.\n"
                  "Conditions with similar WER differ in how that error arises.",
                  fontsize=10.5, pad=8)
-    ax.legend(loc="lower right", frameon=False)
+    ax.legend(
+        loc="upper center", bbox_to_anchor=(0.5, -0.045), ncol=3,
+        frameon=False, borderaxespad=0.0
+    )
     fig.tight_layout()
     save(fig, "figR4_error_composition")
 

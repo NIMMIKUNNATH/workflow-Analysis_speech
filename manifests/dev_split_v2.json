@@ -1,0 +1,23 @@
+{
+  "seed": 42,
+  "requested_dev_n": 10,
+  "realised_dev_n": 14,
+  "holdout_n": 258,
+  "dev_ids": [
+    "CAR0004",
+    "DER0001",
+    "GAS0004",
+    "GEN0001",
+    "MSK0025",
+    "MSK0033",
+    "RES0006",
+    "RES0010",
+    "RES0045",
+    "RES0055",
+    "RES0081",
+    "RES0128",
+    "RES0187",
+    "RES0212"
+  ],
+  "note": "Supersedes the seed-0 dev_split.json in the 26 August manifest, which recorded a split that was never executed. The searches ran through run_parallel.sh, which does not pass --seed, so the argparse default of 42 applied. Confirmed by reference negation token count: seed 42 yields 699, matching Table S5; seed 0 yields 679."
+}

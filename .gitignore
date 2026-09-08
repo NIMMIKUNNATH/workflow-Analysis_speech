@@ -4,6 +4,7 @@
 *.mp4
 *.xlsx
 *.rttm
+*.zip
 
 # Model artefacts and caches
 *.nemo
@@ -29,3 +30,5 @@ optuna_*.log
 # Never commit credentials
 .env
 *.token
+*.pem
+*.key
